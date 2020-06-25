@@ -15,6 +15,7 @@ export class ProductService {
   private productsUrl = 'api/products';
   private suppliersUrl = this.supplierService.suppliersUrl;
 
+  
   constructor(private http: HttpClient,
               private supplierService: SupplierService) { }
 
