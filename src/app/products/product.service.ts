@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 
 import { Product } from './product';
 import { Supplier } from '../suppliers/supplier';
@@ -15,8 +15,20 @@ export class ProductService {
   private productsUrl = 'api/products';
   private suppliersUrl = this.supplierService.suppliersUrl;
 
+  //hover over the products$ to see what the outbut will be
   products$ = this.http.get<Product[]>(this.productsUrl)
     .pipe(
+      //note the map is inside the pipe
+      //the first map is the rxjs map() imported from 'rxjs/operators'
+      map(products =>
+        //this map is the arrays map method
+        products.map( product =>  ({
+        ...product,
+        //the spread copies the object but this below line only changes the one we need
+        price: product.price * 1.5,
+        searchKey: [product.productName]
+      })as Product)
+      ),
       tap(data => console.log('Products: ', JSON.stringify(data))),
       catchError(this.handleError)
     );
